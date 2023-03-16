@@ -15,4 +15,4 @@ const connection = new sequelize.Sequelize(
   database_config
 );
 
-export default connection;
+module.exports = connection;
