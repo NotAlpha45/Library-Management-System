@@ -15,18 +15,18 @@ app.use(
   })
 );
 
-const conn = mysql.createConnection({
-  host: "localhost",
-  user: userName,
-  password: password,
-});
+// const conn = mysql.createConnection({
+//   host: "localhost",
+//   user: userName,
+//   password: password,
+// });
 
-conn.connect((err) => {
-  if (err) {
-    throw err;
-  }
-  console.log("Connected!");
-});
+// conn.connect((err) => {
+//   if (err) {
+//     throw err;
+//   }
+//   console.log("Connected!");
+// });
 
 app.get("/", (req, res) => {
   res.send("Hello");
