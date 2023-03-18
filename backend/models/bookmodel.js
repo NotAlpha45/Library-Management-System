@@ -20,6 +20,9 @@ const book_field_attributes = {
     type: sequelize.STRING,
     allowNull: false,
   },
+  description: {
+    type: sequelize.TEXT,
+  },
 };
 
 const Book = connection.define("Book", book_field_attributes);
