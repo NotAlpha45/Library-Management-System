@@ -4,7 +4,7 @@ const connection = require("../database/database_connection");
 const book_field_attributes = {
   book_id: {
     type: sequelize.INTEGER,
-    autoincrement: true,
+    autoIncrement: true,
     primaryKey: true,
     allowNull: false,
   },
