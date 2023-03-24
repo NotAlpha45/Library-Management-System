@@ -14,25 +14,103 @@ async function createBook(req, res) {
   res.sendStatus(200);
 }
 
-async function getBook(req, res) {
+async function getAllBooks(req, res) {
+  let queryResult = {};
+
+  queryResult = await bookModel.findAll({});
+
+  res.send(queryResult);
+}
+
+async function getBookByName(req, res) {
   const name = req.query.name;
-  const genre = req.query.genre;
+
+  let queryResult = {};
+
+  queryResult = await bookModel.findAll({
+    where: {
+      name: name,
+    },
+  });
+
+  res.send(queryResult);
+}
+
+async function getBookByAuthor(req, res) {
   const author = req.query.author;
 
   let queryResult = {};
 
-  // By default, sequelize assumes and operation for the where clause
-  //
-  const orOperation = sequelize.Op.or;
-  const andOperation = sequelize.Op.and;
   queryResult = await bookModel.findAll({
     where: {
-      [orOperation]: [{ name: name }, { author: author }, { genre: genre }],
+      author: author,
     },
   });
 
-  console.log(queryResult);
   res.send(queryResult);
 }
 
-module.exports = { createBook, getBook };
+async function getBookByGenre(req, res) {
+  const genre = req.query.genre;
+  let queryResult = {};
+  queryResult = await bookModel.findAll({
+    where: {
+      genre: genre,
+    },
+  });
+  res.send(queryResult);
+}
+
+async function updateBook(req, res) {
+  const bookData = req.body;
+
+  await bookModel
+    .update(
+      {
+        name: bookData.name,
+        author: bookData.author,
+        genre: bookData.genre,
+        description: bookData.description,
+      },
+      {
+        where: {
+          book_id: bookData.book_id,
+        },
+      }
+    )
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(404);
+    });
+}
+
+async function deleteBook(req, res) {
+  const bookData = req.body;
+
+  await bookModel
+    .destroy({
+      where: {
+        book_id: bookData.book_id,
+      },
+    })
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.sendStatus(404);
+    });
+}
+
+module.exports = {
+  createBook,
+  getBookByName,
+  getBookByAuthor,
+  getBookByGenre,
+  getAllBooks,
+  updateBook,
+  deleteBook,
+};
