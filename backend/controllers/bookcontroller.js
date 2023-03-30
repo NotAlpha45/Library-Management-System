@@ -17,7 +17,13 @@ async function createBook(req, res) {
 async function getAllBooks(req, res) {
   let queryResult = {};
 
-  queryResult = await bookModel.findAll({});
+  let startBookLimit = req.body.startBookLimit ?? 0;
+  let endBookLimit = req.body.endBookLimit ?? 10;
+
+  queryResult = await bookModel.findAll({
+    offset: startBookLimit,
+    limit: endBookLimit,
+  });
 
   res.send(queryResult);
 }
