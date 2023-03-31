@@ -4,7 +4,7 @@ const sequelize = require("sequelize");
 
 async function createBook(req, res) {
   const bookData = req.body;
-  //   console.log(req);
+  // console.log(req.body);
   await bookModel.create({
     name: bookData.name,
     author: bookData.author,
@@ -15,17 +15,27 @@ async function createBook(req, res) {
 }
 
 async function getAllBooks(req, res) {
-  let queryResult = {};
+  let queryResult = {},
+    queryLength = 0, totalBooks = 0;
 
   let startBookLimit = req.body.startBookLimit ?? 0;
   let endBookLimit = req.body.endBookLimit ?? 10;
+
+  // console.log(startBookLimit, endBookLimit);
 
   queryResult = await bookModel.findAll({
     offset: startBookLimit,
     limit: endBookLimit,
   });
 
-  res.send(queryResult);
+  totalBooks = await bookModel.count({})
+
+  res.send(
+    {
+      "totalBooks":totalBooks,
+      "queryResult":queryResult
+    }
+  );
 }
 
 async function getBookByName(req, res) {

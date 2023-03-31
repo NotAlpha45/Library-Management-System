@@ -1,0 +1,28 @@
+.table-button-container {
+  display: inline-flex;
+  margin: 1rem;
+}
+
+.table-button {
+  width: 6rem;
+  height: 1.5rem;
+  margin-right: 1rem;
+}
+
+#editButton {
+  background-color: forestgreen;
+  color: white;
+}
+
+#editButton:hover {
+  scale: 1.1;
+}
+
+#deleteButton {
+  background-color: red;
+  color: white;
+}
+
+#deleteButton:hover {
+  scale: 1.1;
+}

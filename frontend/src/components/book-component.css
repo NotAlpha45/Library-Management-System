@@ -8,34 +8,37 @@ th,
 td {
   padding: 8px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 2px solid #ddd;
   width: fit-content;
+}
+
+.book-heading-row {
+  background-color: aqua;
 }
 
 tr:hover {
   background-color: #d6eeee;
 }
 
-.tableButton{
-    width: 6rem;
-    height: 1.5rem;
-    margin-right: 1rem;
+.table-nav-footer {
+  display: inline-flex;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: aliceblue;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
 }
 
-#editButton {
-    background-color: forestgreen;
-    color: white;
+.table-nav-button {
+  width: 6rem;
+  height: 1.5rem;
+  margin: 1rem;
+  margin-top: 3rem;
+  background-color: bisque;
+  border-radius: 1rem;
 }
 
-#editButton:hover{
-    scale: 1.1;
-}
-
-#deleteButton {
-    background-color: red;
-    color: white;
-}
-
-#deleteButton:hover{
-    scale: 1.1;
+.table-nav-button:hover {
+  scale: 1.1;
 }
