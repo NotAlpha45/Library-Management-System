@@ -1,0 +1,44 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+  align-items: center;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+  width: fit-content;
+}
+
+.book-heading-row {
+  background-color: aqua;
+}
+
+tr:hover {
+  background-color: #d6eeee;
+}
+
+.table-nav-footer {
+  display: inline-flex;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: aliceblue;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+}
+
+.table-nav-button {
+  width: 6rem;
+  height: 1.5rem;
+  margin: 1rem;
+  margin-top: 3rem;
+  background-color: bisque;
+  border-radius: 1rem;
+}
+
+.table-nav-button:hover {
+  scale: 1.1;
+}
