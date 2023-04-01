@@ -1,6 +1,7 @@
 const { query } = require("express");
 const bookModel = require("../models/bookmodel");
 const sequelize = require("sequelize");
+const operator = sequelize.Op;
 
 async function createBook(req, res) {
   const bookData = req.body;
@@ -16,7 +17,8 @@ async function createBook(req, res) {
 
 async function getAllBooks(req, res) {
   let queryResult = {},
-    queryLength = 0, totalBooks = 0;
+    queryLength = 0,
+    totalBooks = 0;
 
   let startBookLimit = req.body.startBookLimit ?? 0;
   let endBookLimit = req.body.endBookLimit ?? 10;
@@ -28,14 +30,12 @@ async function getAllBooks(req, res) {
     limit: endBookLimit,
   });
 
-  totalBooks = await bookModel.count({})
+  totalBooks = await bookModel.count({});
 
-  res.send(
-    {
-      "totalBooks":totalBooks,
-      "queryResult":queryResult
-    }
-  );
+  res.send({
+    totalBooks: totalBooks,
+    queryResult: queryResult,
+  });
 }
 
 async function getBookByName(req, res) {
@@ -45,7 +45,7 @@ async function getBookByName(req, res) {
 
   queryResult = await bookModel.findAll({
     where: {
-      name: name,
+      name: { [operator.like]: `%${name}%` },
     },
   });
 
@@ -59,7 +59,7 @@ async function getBookByAuthor(req, res) {
 
   queryResult = await bookModel.findAll({
     where: {
-      author: author,
+      author: { [operator.like]: `%${author}%` },
     },
   });
 
@@ -71,7 +71,7 @@ async function getBookByGenre(req, res) {
   let queryResult = {};
   queryResult = await bookModel.findAll({
     where: {
-      genre: genre,
+      genre: { [operator.like]: `%${genre}%` },
     },
   });
   res.send(queryResult);
