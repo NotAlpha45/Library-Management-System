@@ -1,4 +1,3 @@
-const { query } = require("express");
 const bookModel = require("../models/bookmodel");
 const sequelize = require("sequelize");
 const operator = sequelize.Op;
