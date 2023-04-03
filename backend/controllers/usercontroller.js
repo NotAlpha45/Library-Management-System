@@ -2,7 +2,10 @@ const userModel = require("../models/usermodel");
 const sequelize = require("sequelize");
 const operator = sequelize.Op;
 const bcrypt = require("bcrypt");
+const jsonwebtoken = require("jsonwebtoken");
+require("dotenv").config();
 
+const secret = process.env.SECRET;
 /**
  * request body format {name, email, password, phone}
  *
@@ -10,50 +13,62 @@ const bcrypt = require("bcrypt");
  */
 async function createUser(req, res) {
   const userData = req.body;
-  const existingUser =
-    (await userModel.findAll({
-      where: { email: userData.email },
-    })) ?? [];
 
-  if (!existingUser) {
+  const emptyUser = {};
+
+  const existingUser =
+    (await userModel.findOne({
+      where: { email: userData.email },
+    })) ?? emptyUser;
+
+  if (existingUser !== emptyUser) {
     res.send({
       account_creatable: false,
     });
   } else {
     userData.password = await bcrypt.hash(userData.password, 10);
 
-    await userModel.create(userData).catch((err) => {
+    const newUser = await userModel.create(userData).catch((err) => {
       res.sendStatus(500);
+    });
+
+    let userSignature = {
+      user_id: newUser.dataValues.user_id,
+    };
+
+    const userToken = jsonwebtoken.sign(userSignature, secret, {
+      expiresIn: "2 days",
     });
 
     res.send({
       account_creatable: true,
+      user_token: userToken,
     });
   }
 }
 
 /**
- * request body format {email, password}
+ * request header will have the token under authtoken name
  *
  * response body format a single JSON of the user data or empty JSON
  */
 async function getUser(req, res) {
-  const userData = req.body;
+  const userToken = req.headers.authtoken;
 
-  let existingUser =
-    (await userModel.findOne({
-      where: {
-        email: userData.email,
-      },
-    })) ?? {};
+  const isValid = jsonwebtoken.verify(userToken, secret);
 
-  const passwordMatched = await bcrypt.compare(
-    userData.password,
-    existingUser.password
-  );
+  if (!isValid) {
+    res.send({});
+    return;
+  }
+
+  const userData = jsonwebtoken.decode(userToken);
+  const emptyUser = {};
+
+  let existingUser = (await userModel.findByPk(userData.user_id)) ?? emptyUser;
+
   //   console.log(passwordMatched);
-
-  if (passwordMatched) {
+  if (existingUser !== emptyUser) {
     existingUser.password = undefined;
     res.send(existingUser);
   } else {
