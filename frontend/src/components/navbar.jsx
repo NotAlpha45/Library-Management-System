@@ -1,17 +1,15 @@
 import React from "react";
 import "./navbar.css";
 
-function Navbar() {
-
-    const [isSignedIn, setIsSignedIn] = React.useState(false);
+function Navbar({ appStatus }) {
 
     return (
         <div className="topnav">
-            <button href="#home">Home</button>
-            <button href="#news">Books</button>
-            <button href="#contact">Admin</button>
-            <button href="#about" className="split">
-                {isSignedIn ? "My Account" : "Sign In"}
+            <button onClick={() => { appStatus.pageUtilities.setCurrentPage("home") }}>Home</button>
+            <button onClick={() => { appStatus.pageUtilities.setCurrentPage("books") }}>Books</button>
+            <button onClick={() => { appStatus.pageUtilities.setCurrentPage("admin") }}>Admin</button>
+            <button className="split" onClick={() => { appStatus.pageUtilities.setCurrentPage("user-log-in") }}>
+                {appStatus.authUtilities.isSignedIn ? "My Account" : "Sign In"}
             </button>
         </div>
 

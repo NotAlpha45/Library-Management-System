@@ -2,6 +2,7 @@ import * as React from 'react';
 import "./book-component.css"
 import axios, { Axios } from 'axios'
 import BookButtonGroup from './book-button-group';
+import BookForm from './book-form';
 
 export default function BookTable() {
 
@@ -9,6 +10,7 @@ export default function BookTable() {
     const [startBookLimit, setStartBookLimit] = React.useState(0);
     const [endBookLimit, setEndBookLimit] = React.useState(10);
     const [totalBooks, setTotalBooks] = React.useState(0);
+    const [editMode, setEditMode] = React.useState(false);
 
     // This flag just keeps track of whether a book has been deleted or not. 
     // In that case, we need to reload the component, and hence we use this flag to notify
@@ -56,13 +58,14 @@ export default function BookTable() {
     // To avoid rendering on every refresh
     React.useEffect(function () {
         loadBooks();
-    }, [BookButtonGroup, startBookLimit, endBookLimit, bookDeleteFlag])
+    }, [BookButtonGroup, startBookLimit, endBookLimit, bookDeleteFlag, editMode])
 
     return (
         <div>
             <div className="table-container">
-                <h2>Hoverable Table</h2>
-                <p>Move the mouse over the table rows to see the effect.</p>
+                <h2>Book Table</h2>
+                <p>Add, Edit or Delete a Book</p>
+                {editMode ? (<BookForm editMode={editMode} setEditMode={setEditMode} />) : ""}
                 <table>
                     <tbody>
                         <tr className='book-heading-row'>
@@ -72,7 +75,11 @@ export default function BookTable() {
                             <th>Genre</th>
                             <th>Description</th>
                         </tr>
+                        <tr>
+                            <td colSpan={5}>
 
+                            </td>
+                        </tr>
                         {
                             bookData.map(function (book) {
                                 return (
@@ -87,7 +94,9 @@ export default function BookTable() {
                                                 {
                                                     "book_id": book.book_id,
                                                     "deleteFlag": bookDeleteFlag,
-                                                    "setDeleteFlag": setBookDeleteFlag
+                                                    "setDeleteFlag": setBookDeleteFlag,
+                                                    "editMode": editMode,
+                                                    "setEditMode": setEditMode
                                                 }
                                             } />
 

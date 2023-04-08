@@ -1,0 +1,80 @@
+.book-edit-component {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 20rem;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  z-index: 9999;
+  background-color: white;
+  overflow: auto;
+  margin-bottom: 1rem;
+}
+
+.book-edit-component label {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+}
+
+.book-edit-component input[type="text"],
+.book-edit-component select,
+.book-edit-component textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.book-edit-component input[type="text"],
+.book-edit-component select {
+  height: fit-content;
+  font-size: 1rem;
+  width: 15rem;
+}
+
+.book-edit-component select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4' viewBox='0 0 8 4'%3E%3Cpath fill='%23a1a1a1' d='M0 0l4 4 4-4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  height: fit-content;
+  font-size: 1rem;
+}
+
+.book-edit-component textarea {
+  resize: none;
+  height: 4rem;
+  width: 20rem;
+  display: inline-flex;
+  font-size: 1rem;
+}
+
+.book-edit-component button {
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #1e90ff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 5rem;
+}
+
+.book-edit-component button:hover {
+  background-color: #4b9bff;
+}
+
+.book-edit-component .error-message {
+  color: #ff0000;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
