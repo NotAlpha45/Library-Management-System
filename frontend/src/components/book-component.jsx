@@ -11,6 +11,7 @@ export default function BookTable() {
     const [endBookLimit, setEndBookLimit] = React.useState(10);
     const [totalBooks, setTotalBooks] = React.useState(0);
     const [editMode, setEditMode] = React.useState(false);
+    const [toBeEditedBookData, setToBeEditedBookData] = React.useState(null);
 
     // This flag just keeps track of whether a book has been deleted or not. 
     // In that case, we need to reload the component, and hence we use this flag to notify
@@ -52,20 +53,20 @@ export default function BookTable() {
         else {
             setStartBookLimit(startBookLimit - endBookLimit)
         }
-        console.log(startBookLimit);
     }
 
     // To avoid rendering on every refresh
     React.useEffect(function () {
         loadBooks();
-    }, [BookButtonGroup, startBookLimit, endBookLimit, bookDeleteFlag, editMode])
+    }, [editMode, startBookLimit, endBookLimit, bookDeleteFlag])
+
 
     return (
         <div>
             <div className="table-container">
                 <h2>Book Table</h2>
                 <p>Add, Edit or Delete a Book</p>
-                {editMode ? (<BookForm editMode={editMode} setEditMode={setEditMode} />) : ""}
+                {editMode ? (<BookForm editMode={editMode} setEditMode={setEditMode} toBeEditedBookData={toBeEditedBookData} />) : ""}
                 <table>
                     <tbody>
                         <tr className='book-heading-row'>
@@ -96,7 +97,9 @@ export default function BookTable() {
                                                     "deleteFlag": bookDeleteFlag,
                                                     "setDeleteFlag": setBookDeleteFlag,
                                                     "editMode": editMode,
-                                                    "setEditMode": setEditMode
+                                                    "setEditMode": setEditMode,
+                                                    "toBeEditedBookData": book,
+                                                    "setToBeEditedBookData": setToBeEditedBookData
                                                 }
                                             } />
 

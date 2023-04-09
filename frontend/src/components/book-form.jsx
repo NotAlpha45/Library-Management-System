@@ -1,24 +1,49 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useEffect } from "react";
 import "./book-form.css";
 
-const BookForm = ({ editMode, setEditMode }) => {
-    const [bookName, setBookName] = useState("");
-    const [bookAuthor, setBookAuthor] = useState("");
-    const [bookGenre, setBookGenre] = useState("");
-    const [bookReview, setBookReview] = useState("");
+const BookForm = ({ editMode, setEditMode, toBeEditedBookData }) => {
+    const [bookName, setBookName] = useState(toBeEditedBookData.name ?? "");
+    const [bookAuthor, setBookAuthor] = useState(toBeEditedBookData.author ?? "");
+    const [bookGenre, setBookGenre] = useState(toBeEditedBookData.genre ?? "");
+    const [bookDescription, setBookDescription] = useState(toBeEditedBookData.description ?? "");
+    const [bookId, setBookId] = useState(toBeEditedBookData.book_id ?? "")
 
-    console.log(editMode);
+    useEffect(() => {
+        setBookName(toBeEditedBookData.name ?? "");
+        setBookAuthor(toBeEditedBookData.author ?? "");
+        setBookGenre(toBeEditedBookData.genre ?? "");
+        setBookDescription(toBeEditedBookData.description ?? "");
+        setBookId(toBeEditedBookData.book_id ?? "");
+    }, [toBeEditedBookData]);
 
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
         setEditMode(false);
         event.preventDefault();
-        // Handle form submit logic here
+
+        await axios.post(
+            "http://localhost:5000/update-book/",
+
+            {
+                "book_id": bookId,
+                "name": bookName,
+                "author": bookAuthor,
+                "genre": bookGenre,
+                "description": bookDescription
+            }
+        ).then(() => {
+            alert("The book has been updated");
+        }).catch((error) => {
+            alert(`Some error occured ${error}`)
+        })
+
         console.log({
             bookName,
             bookAuthor,
             bookGenre,
-            bookReview,
+            bookDescription,
         });
     };
 
@@ -66,11 +91,11 @@ const BookForm = ({ editMode, setEditMode }) => {
                     Review:
                     <textarea
                         className="book-edit-component-textarea"
-                        value={bookReview}
-                        onChange={(e) => setBookReview(e.target.value)}
+                        value={bookDescription}
+                        onChange={(e) => setBookDescription(e.target.value)}
                     />
                 </label>
-                <button type="button" onClick={handleFormSubmit} className="book-edit-component-submit-button">
+                <button type="button" onClick={(event) => { handleFormSubmit(event) }} className="book-edit-component-submit-button">
                     Save
                 </button>
             </form>
