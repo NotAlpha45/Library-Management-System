@@ -21,15 +21,45 @@ async function getAllBooks(req, res) {
 
   let startBookLimit = req.body.startBookLimit ?? 0;
   let endBookLimit = req.body.endBookLimit ?? 10;
+  let toBeSearchedBookName = req.body.toBeSearchedBookName ?? "";
 
-  // console.log(startBookLimit, endBookLimit);
+  if (toBeSearchedBookName == "") {
+    queryResult = await bookModel.findAll({
+      offset: startBookLimit,
+      limit: endBookLimit,
+      order: [["createdAt", "DESC"]],
+    });
 
-  queryResult = await bookModel.findAll({
-    offset: startBookLimit,
-    limit: endBookLimit,
-  });
+    totalBooks = await bookModel.count({});
+  } else {
+    queryResult = await bookModel.findAll({
+      where: {
+        [operator.or]: [
 
-  totalBooks = await bookModel.count({});
+          { name: { [operator.like]: `%${toBeSearchedBookName}%` } },
+          { author: { [operator.like]: `%${toBeSearchedBookName}%` } },
+          { genre: { [operator.like]: `%${toBeSearchedBookName}%` } },
+        ],
+      },
+      offset: startBookLimit,
+      limit: endBookLimit,
+      order: [["createdAt", "DESC"]],
+    });
+
+    totalBooks = await bookModel.count({
+      where: {
+        [operator.or]: [
+          // {name: [operator.like]:`%${toBeSearchedBookName}%`}
+          { name: { [operator.like]: `%${toBeSearchedBookName}%` } },
+          { author: { [operator.like]: `%${toBeSearchedBookName}%` } },
+          { genre: { [operator.like]: `%${toBeSearchedBookName}%` } },
+        ],
+      },
+      offset: startBookLimit,
+      limit: endBookLimit,
+      order: [["createdAt", "DESC"]],
+    });
+  }
 
   res.send({
     totalBooks: totalBooks,

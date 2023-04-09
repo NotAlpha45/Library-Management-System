@@ -38,13 +38,6 @@ const BookForm = ({ editMode, setEditMode, toBeEditedBookData }) => {
         }).catch((error) => {
             alert(`Some error occured ${error}`)
         })
-
-        console.log({
-            bookName,
-            bookAuthor,
-            bookGenre,
-            bookDescription,
-        });
     };
 
     return (
@@ -95,9 +88,15 @@ const BookForm = ({ editMode, setEditMode, toBeEditedBookData }) => {
                         onChange={(e) => setBookDescription(e.target.value)}
                     />
                 </label>
-                <button type="button" onClick={(event) => { handleFormSubmit(event) }} className="book-edit-component-submit-button">
-                    Save
-                </button>
+                <div className="book-edit-component-button-group">
+                    <button id="save-button" type="button" onClick={(event) => { handleFormSubmit(event) }} className="book-edit-component-submit-button">
+                        Save
+                    </button>
+                    <button id="cancel-button" type="button" onClick={(event) => { setEditMode(false); }} className="book-edit-component-submit-button">
+                        Cancel
+                    </button>
+                </div>
+
             </form>
         </div>
 

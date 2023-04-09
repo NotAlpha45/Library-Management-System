@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import "./user-login-page.css";
+import axios from "axios";
 
 const UserLoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [userToken, setUserToken] = useState("");
 
-    const handleSubmit = (event) => {
+
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
         // validate the email address
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -14,8 +18,23 @@ const UserLoginPage = () => {
             return;
         }
         // make an API call to validate the user's credentials and receive a token
-        const token = "example-token"; // replace with actual token received from the server
-        localStorage.setItem("token", token);
+        await axios.post(
+            "http://localhost:5000/login-user",
+            {
+                email: email,
+                password: password
+            }
+        ).then(() => {
+            const token = res.data.user_token;
+            console.log(token);
+            // replace with actual token received from the server
+            localStorage.setItem("userToken", token);
+        }).catch((error) => {
+            alert("Login failed. Check your email and password");
+            localStorage.setItem("userToken", "");
+        })
+
+
         // redirect the user to the main page or perform any other actions necessary
     };
 

@@ -76,4 +76,38 @@ async function getUser(req, res) {
   }
 }
 
-module.exports = { createUser, getUser };
+/**
+ * request format : {email, password}
+ *
+ * response format : {user_token} on success. 404 error on failure
+ */
+async function loginUser(req, res) {
+  const email = req.body.email;
+  const password = req.body.password;
+  const user = await userModel.findOne({
+    where: {
+      email: email,
+    },
+  });
+
+  const isVerified = bcrypt.compareSync(password, user.dataValues.password);
+
+  if (isVerified) {
+
+    let userSignature = {
+      user_id: user.dataValues.user_id,
+    };
+
+    const userToken = jsonwebtoken.sign(userSignature, secret, {
+      expiresIn: "2 days",
+    });
+
+    res.send({
+      user_token: userToken,
+    });
+  } else {
+    res.sendStatus(404);
+  }
+}
+
+module.exports = { createUser, getUser, loginUser };

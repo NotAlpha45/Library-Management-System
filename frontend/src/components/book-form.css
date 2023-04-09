@@ -78,3 +78,17 @@
   margin-top: 5px;
   margin-bottom: 0;
 }
+
+.book-edit-component-button-group {
+  display: inline-flex;
+}
+
+#save-button {
+  background-color: green;
+  margin: 0.3rem;
+}
+
+#cancel-button {
+  background-color: darkorange;
+  margin: 0.3rem;
+}
