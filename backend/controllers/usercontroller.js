@@ -52,6 +52,30 @@ async function createUser(req, res) {
  *
  * response body format a single JSON of the user data or empty JSON
  */
+async function verifyToken(req, res) {
+  const userToken = req.headers.authtoken;
+  // console.log(userToken);
+
+  if (!userToken) {
+    res.sendStatus(402);
+    return;
+  }
+
+  const isValid = jsonwebtoken.verify(userToken, secret);
+
+  if (isValid) {
+    res.sendStatus(202);
+  } else {
+    res.sendStatus(402);
+  }
+}
+
+/**
+ * request header will have the token under authtoken name
+ *
+ * response body format a single JSON of the user data or empty JSON
+ */
+
 async function getUser(req, res) {
   const userToken = req.headers.authtoken;
 
@@ -93,7 +117,6 @@ async function loginUser(req, res) {
   const isVerified = bcrypt.compareSync(password, user.dataValues.password);
 
   if (isVerified) {
-
     let userSignature = {
       user_id: user.dataValues.user_id,
     };
@@ -110,4 +133,4 @@ async function loginUser(req, res) {
   }
 }
 
-module.exports = { createUser, getUser, loginUser };
+module.exports = { createUser, getUser, loginUser, verifyToken };

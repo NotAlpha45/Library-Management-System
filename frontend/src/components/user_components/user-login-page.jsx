@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import "./user-login-page.css";
 import axios from "axios";
 
-const UserLoginPage = () => {
+const UserLoginPage = ({ userToken, setUserToken, setCurrentPage }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [userToken, setUserToken] = useState("");
+
 
 
 
@@ -24,13 +24,20 @@ const UserLoginPage = () => {
                 email: email,
                 password: password
             }
-        ).then(() => {
+        ).then((res) => {
             const token = res.data.user_token;
-            console.log(token);
-            // replace with actual token received from the server
+
+            setUserToken(token);
+
             localStorage.setItem("userToken", token);
+
+            alert("You are logged in");
+
+            setCurrentPage("home");
+
         }).catch((error) => {
             alert("Login failed. Check your email and password");
+            setUserToken("")
             localStorage.setItem("userToken", "");
         })
 
