@@ -15,11 +15,8 @@ export default function BookTable() {
     const [toBeEditedBookData, setToBeEditedBookData] = React.useState(null);
     const [toBeSearchedBookName, setToBeSearchedBookName] = React.useState("");
 
-    // This flag just keeps track of whether a book has been deleted or not. 
-    // In that case, we need to reload the component, and hence we use this flag to notify
-    // useEffect to reload, hence, this flag 
-    const [bookDeleteFlag, setBookDeleteFlag] = React.useState(false);
-
+    // Whenever a CRUD operation happens, this flag will contain the timestamp of that operation
+    // and since time is changing constantly, the table will be refreshed.
     const [operationTimeStamp, setOperationTimeStamp] = React.useState(Date.now())
 
     async function loadBooks() {
@@ -63,7 +60,7 @@ export default function BookTable() {
     // To avoid rendering on every refresh
     React.useEffect(function () {
         loadBooks();
-    }, [operationTimeStamp, toBeSearchedBookName, editMode, startBookLimit, endBookLimit, bookDeleteFlag])
+    }, [operationTimeStamp, toBeSearchedBookName, editMode, startBookLimit, endBookLimit])
 
 
     return (
@@ -109,14 +106,12 @@ export default function BookTable() {
                                                 <BookButtonGroup bookCollection={
                                                     {
                                                         "book_id": book.book_id,
-                                                        "deleteFlag": bookDeleteFlag,
-                                                        "setDeleteFlag": setBookDeleteFlag,
                                                         "editMode": editMode,
                                                         "setEditMode": setEditMode,
                                                         "toBeEditedBookData": book,
                                                         "setToBeEditedBookData": setToBeEditedBookData
                                                     }
-                                                } />
+                                                } setOperationTimeStamp={setOperationTimeStamp} />
 
                                             </tr>
                                         </>

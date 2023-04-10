@@ -3,7 +3,7 @@ import "./book-button-group.css"
 import axios from "axios";
 import Popup from "./notification-popup";
 
-export default function BookButtonGroup({ bookCollection }) {
+export default function BookButtonGroup({ bookCollection, setOperationTimeStamp }) {
     // console.log(book_id);
 
     function deleteBook() {
@@ -12,7 +12,7 @@ export default function BookButtonGroup({ bookCollection }) {
             "book_id": bookCollection.book_id
 
         }).then((res) => {
-            bookCollection.deleteFlag ? bookCollection.setDeleteFlag(false) : bookCollection.setDeleteFlag(true);
+            setOperationTimeStamp(Date.now());
             alert("Book deleted");
 
         }).catch((err) => {
