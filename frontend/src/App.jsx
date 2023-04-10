@@ -1,8 +1,8 @@
 import axios from "axios"
 import { useState, useEffect } from 'react'
-import Navbar from './components/navbar'
+import Navbar from './components/navbar_components/navbar'
 import './App.css'
-import BookTable from './components/book-component'
+import BookTable from './components/book_components/book-component'
 import UserLoginPage from './components/user_components/user-login-page'
 import HomePage from './components/homepage_components/home'
 
