@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import "./book-form.css";
 
-const BookForm = ({ editMode, setEditMode, toBeEditedBookData }) => {
+const BookForm = ({ editMode, setEditMode, toBeEditedBookData, successMessage, operationType, setOperationTimeStamp }) => {
     const [bookName, setBookName] = useState(toBeEditedBookData.name ?? "");
     const [bookAuthor, setBookAuthor] = useState(toBeEditedBookData.author ?? "");
     const [bookGenre, setBookGenre] = useState(toBeEditedBookData.genre ?? "");
@@ -20,24 +20,53 @@ const BookForm = ({ editMode, setEditMode, toBeEditedBookData }) => {
 
 
     const handleFormSubmit = async (event) => {
-        setEditMode(false);
+
         event.preventDefault();
 
-        await axios.post(
-            "http://localhost:5000/update-book/",
+        if (operationType == "update") {
+            await axios.post(
+                "http://localhost:5000/update-book/",
 
-            {
-                "book_id": bookId,
-                "name": bookName,
-                "author": bookAuthor,
-                "genre": bookGenre,
-                "description": bookDescription
+                {
+                    "book_id": bookId,
+                    "name": bookName,
+                    "author": bookAuthor,
+                    "genre": bookGenre,
+                    "description": bookDescription
+                }
+            ).then(() => {
+                setEditMode(false);
+                setOperationTimeStamp(Date.now())
+                alert(`${successMessage}`);
+            }).catch((error) => {
+                alert(`Some error occured ${error}`)
+            })
+        } else if (operationType == "create") {
+
+            if (bookName == "" || bookAuthor == "" || bookGenre == "") {
+                alert("Please enter book name, author name and genre")
+                return
             }
-        ).then(() => {
-            alert("The book has been updated");
-        }).catch((error) => {
-            alert(`Some error occured ${error}`)
-        })
+
+            await axios.post(
+                "http://localhost:5000/post-book/",
+
+                {
+                    "name": bookName,
+                    "author": bookAuthor,
+                    "genre": bookGenre,
+                    "description": bookDescription
+                }
+            ).then(() => {
+                setEditMode(false);
+                setOperationTimeStamp(Date.now())
+                alert(`${successMessage}`);
+            }).catch((error) => {
+                alert(`Some error occured ${error}`)
+            })
+        }
+
+
     };
 
     return (

@@ -15,10 +15,9 @@ export default function BookTable() {
     const [toBeEditedBookData, setToBeEditedBookData] = React.useState(null);
     const [toBeSearchedBookName, setToBeSearchedBookName] = React.useState("");
 
-    // This flag just keeps track of whether a book has been deleted or not. 
-    // In that case, we need to reload the component, and hence we use this flag to notify
-    // useEffect to reload, hence, this flag 
-    const [bookDeleteFlag, setBookDeleteFlag] = React.useState(false);
+    // Whenever a CRUD operation happens, this flag will contain the timestamp of that operation
+    // and since time is changing constantly, the table will be refreshed.
+    const [operationTimeStamp, setOperationTimeStamp] = React.useState(Date.now())
 
     async function loadBooks() {
 
@@ -61,7 +60,7 @@ export default function BookTable() {
     // To avoid rendering on every refresh
     React.useEffect(function () {
         loadBooks();
-    }, [toBeSearchedBookName, editMode, startBookLimit, endBookLimit, bookDeleteFlag])
+    }, [operationTimeStamp, toBeSearchedBookName, editMode, startBookLimit, endBookLimit])
 
 
     return (
@@ -69,14 +68,14 @@ export default function BookTable() {
             <div className="table-container">
                 <div>
                     <h2>Book Table</h2>
-                    <p>Add, Edit or Delete a Book</p>
-
+                    <h3>Add A Book</h3>
                 </div>
+                <div>
+                    <BookForm editMode={editMode} setEditMode={setEditMode} toBeEditedBookData={{}} successMessage={"Book created successfully"} operationType={"create"} setOperationTimeStamp={setOperationTimeStamp} />
+                </div>
+
                 <div>
                     <SearchBar toBeSearchedBookName={toBeSearchedBookName} setToBeSearchedBookName={setToBeSearchedBookName} setStartBookLimit={setStartBookLimit} setEndBookLimit={setEndBookLimit} />
-                </div>
-                <div>
-                    {editMode ? (<BookForm editMode={editMode} setEditMode={setEditMode} toBeEditedBookData={toBeEditedBookData} />) : ""}
                 </div>
 
                 <div>
@@ -107,14 +106,12 @@ export default function BookTable() {
                                                 <BookButtonGroup bookCollection={
                                                     {
                                                         "book_id": book.book_id,
-                                                        "deleteFlag": bookDeleteFlag,
-                                                        "setDeleteFlag": setBookDeleteFlag,
                                                         "editMode": editMode,
                                                         "setEditMode": setEditMode,
                                                         "toBeEditedBookData": book,
                                                         "setToBeEditedBookData": setToBeEditedBookData
                                                     }
-                                                } />
+                                                } setOperationTimeStamp={setOperationTimeStamp} />
 
                                             </tr>
                                         </>
@@ -135,6 +132,17 @@ export default function BookTable() {
                 </div>
 
             </div>
+
+            <div>
+                <h2>Edit Book</h2>
+            </div>
+            <div>
+                {editMode ? (
+                    <BookForm editMode={editMode} setEditMode={setEditMode} toBeEditedBookData={toBeEditedBookData} successMessage={"Book edited successfully"} operationType={"update"} setOperationTimeStamp={setOperationTimeStamp} />
+                ) : ""}
+            </div>
+
+
         </div>
     );
 }
