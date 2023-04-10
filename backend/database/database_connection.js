@@ -1,11 +1,12 @@
 const sequelize = require("sequelize");
+require("dotenv").config();
 
-const userName = "maheen";
-const password = "maheen123";
-const database_name = "book_database";
+const userName = process.env.DB_USER;
+const password = process.env.DB_PASSWORD;
+const database_name = process.env.DB_NAME;
 const database_config = {
   dialect: "mysql",
-  host: "localhost",
+  host: process.env.HOST,
 };
 
 const connection = new sequelize.Sequelize(
