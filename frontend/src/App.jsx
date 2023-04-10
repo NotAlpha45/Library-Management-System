@@ -11,7 +11,7 @@ function App() {
 
   const [currentPage, setCurrentPage] = useState("home");
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [userToken, setUserToken] = useState("");
+  const [userToken, setUserToken] = useState(localStorage.getItem("userToken") ?? "");
   const [PageToRender, setPageToRender] = useState(null);
   const [tokenVerfied, setTokenVerfied] = useState(false);
 
@@ -30,6 +30,8 @@ function App() {
     }).catch((error) => {
 
       setTokenVerfied(false);
+      setUserToken("");
+      localStorage.setItem("userToken", "");
 
     })
   }

@@ -23,7 +23,7 @@ export default function BookButtonGroup({ bookCollection }) {
 
     return (
         <div className='table-button-container'>
-            <button className='table-button' id='editButton' type='button' onClick={() => { bookCollection.setToBeEditedBookData(bookCollection.toBeEditedBookData); bookCollection.setEditMode(true); window.scrollTo(0, 0); }}>Edit</button>
+            <button className='table-button' id='editButton' type='button' onClick={() => { bookCollection.setToBeEditedBookData(bookCollection.toBeEditedBookData); bookCollection.setEditMode(true); window.scrollTo({ top: document.documentElement.scrollHeight }); }}>Edit</button>
             <button className='table-button' id='deleteButton' type='button' onClick={deleteBook}>Delete</button>
         </div>
     )

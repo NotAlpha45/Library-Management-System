@@ -20,6 +20,8 @@ export default function BookTable() {
     // useEffect to reload, hence, this flag 
     const [bookDeleteFlag, setBookDeleteFlag] = React.useState(false);
 
+    const [operationTimeStamp, setOperationTimeStamp] = React.useState(Date.now())
+
     async function loadBooks() {
 
         await axios.post(
@@ -61,7 +63,7 @@ export default function BookTable() {
     // To avoid rendering on every refresh
     React.useEffect(function () {
         loadBooks();
-    }, [toBeSearchedBookName, editMode, startBookLimit, endBookLimit, bookDeleteFlag])
+    }, [operationTimeStamp, toBeSearchedBookName, editMode, startBookLimit, endBookLimit, bookDeleteFlag])
 
 
     return (
@@ -69,14 +71,14 @@ export default function BookTable() {
             <div className="table-container">
                 <div>
                     <h2>Book Table</h2>
-                    <p>Add, Edit or Delete a Book</p>
-
+                    <h3>Add A Book</h3>
                 </div>
+                <div>
+                    <BookForm editMode={editMode} setEditMode={setEditMode} toBeEditedBookData={{}} successMessage={"Book created successfully"} operationType={"create"} setOperationTimeStamp={setOperationTimeStamp} />
+                </div>
+
                 <div>
                     <SearchBar toBeSearchedBookName={toBeSearchedBookName} setToBeSearchedBookName={setToBeSearchedBookName} setStartBookLimit={setStartBookLimit} setEndBookLimit={setEndBookLimit} />
-                </div>
-                <div>
-                    {editMode ? (<BookForm editMode={editMode} setEditMode={setEditMode} toBeEditedBookData={toBeEditedBookData} />) : ""}
                 </div>
 
                 <div>
@@ -135,6 +137,17 @@ export default function BookTable() {
                 </div>
 
             </div>
+
+            <div>
+                <h2>Edit Book</h2>
+            </div>
+            <div>
+                {editMode ? (
+                    <BookForm editMode={editMode} setEditMode={setEditMode} toBeEditedBookData={toBeEditedBookData} successMessage={"Book edited successfully"} operationType={"update"} setOperationTimeStamp={setOperationTimeStamp} />
+                ) : ""}
+            </div>
+
+
         </div>
     );
 }
