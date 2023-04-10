@@ -24,7 +24,7 @@ To install the required dependencies, follow these steps:
     DB_USER = your username
     DB_PASSWORD = your password
     DB_NAME = database name
-    HOST = your host name
+    HOST = "localhost"
     ```
 4. Create a new database named `book_database` in your MySQL instance.
 5. In the `backend` directory, run the command `npm i` to install the backend dependencies.
