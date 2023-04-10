@@ -3,6 +3,7 @@ const cors = require("cors");
 const mysql = require("mysql");
 const connection = require("./database/database_connection");
 const bookRouter = require("./routers/bookrouter");
+const userRouter = require("./routers/userrouter");
 
 require("dotenv").config();
 
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(bookRouter);
+app.use(userRouter);
 
 app.listen(port, () => {
   console.log(`App is listening on http://localhost:${port}`);

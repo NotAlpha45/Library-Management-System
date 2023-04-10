@@ -1,35 +1,81 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import axios from "axios"
+import { useState, useEffect } from 'react'
+import Navbar from './components/navbar'
 import './App.css'
 import BookTable from './components/book-component'
+import UserLoginPage from './components/user_components/user-login-page'
+import HomePage from './components/homepage_components/home'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [currentPage, setCurrentPage] = useState("home");
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [userToken, setUserToken] = useState("");
+  const [PageToRender, setPageToRender] = useState(null);
+  const [tokenVerfied, setTokenVerfied] = useState(false);
+
+  async function verifyToken() {
+    await axios.get(
+      "http://localhost:5000/verify-token",
+      {
+        headers: {
+          "authtoken": userToken
+        }
+      }
+    ).then((res) => {
+
+      setTokenVerfied(true);
+
+    }).catch((error) => {
+
+      setTokenVerfied(false);
+
+    })
+  }
+
+  useEffect(() => {
+
+    setUserToken(localStorage.getItem("userToken"));
+    verifyToken();
+
+    switch (currentPage) {
+      case "books":
+        if (tokenVerfied) {
+          setPageToRender(<BookTable />)
+        }
+        break;
+
+      case "user-log-in":
+        setPageToRender(<UserLoginPage userToken={userToken} setUserToken={setUserToken} setCurrentPage={setCurrentPage} />)
+        break;
+
+      case "home":
+        setPageToRender(<HomePage />)
+        break;
+
+      default:
+        break;
+    }
+  }, [currentPage, isSignedIn])
+
 
   return (
     <div className="App">
-      <BookTable />
-      {/* <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
+
+      <Navbar appStatus={{
+        pageUtilities: {
+          currentPage: currentPage,
+          setCurrentPage: setCurrentPage
+        },
+        authUtilities: {
+          isSignedIn: isSignedIn,
+          setIsSignedIn: setIsSignedIn
+        }
+      }} userToken={userToken} setUserToken={setUserToken} />
+
+      {PageToRender}
+
     </div>
   )
 }

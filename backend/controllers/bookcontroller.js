@@ -1,6 +1,6 @@
-const { query } = require("express");
 const bookModel = require("../models/bookmodel");
 const sequelize = require("sequelize");
+const operator = sequelize.Op;
 
 async function createBook(req, res) {
   const bookData = req.body;
@@ -16,26 +16,55 @@ async function createBook(req, res) {
 
 async function getAllBooks(req, res) {
   let queryResult = {},
-    queryLength = 0, totalBooks = 0;
+    queryLength = 0,
+    totalBooks = 0;
 
   let startBookLimit = req.body.startBookLimit ?? 0;
   let endBookLimit = req.body.endBookLimit ?? 10;
+  let toBeSearchedBookName = req.body.toBeSearchedBookName ?? "";
 
-  // console.log(startBookLimit, endBookLimit);
+  if (toBeSearchedBookName == "") {
+    queryResult = await bookModel.findAll({
+      offset: startBookLimit,
+      limit: endBookLimit,
+      order: [["createdAt", "DESC"]],
+    });
 
-  queryResult = await bookModel.findAll({
-    offset: startBookLimit,
-    limit: endBookLimit,
+    totalBooks = await bookModel.count({});
+  } else {
+    queryResult = await bookModel.findAll({
+      where: {
+        [operator.or]: [
+
+          { name: { [operator.like]: `%${toBeSearchedBookName}%` } },
+          { author: { [operator.like]: `%${toBeSearchedBookName}%` } },
+          { genre: { [operator.like]: `%${toBeSearchedBookName}%` } },
+        ],
+      },
+      offset: startBookLimit,
+      limit: endBookLimit,
+      order: [["createdAt", "DESC"]],
+    });
+
+    totalBooks = await bookModel.count({
+      where: {
+        [operator.or]: [
+          // {name: [operator.like]:`%${toBeSearchedBookName}%`}
+          { name: { [operator.like]: `%${toBeSearchedBookName}%` } },
+          { author: { [operator.like]: `%${toBeSearchedBookName}%` } },
+          { genre: { [operator.like]: `%${toBeSearchedBookName}%` } },
+        ],
+      },
+      offset: startBookLimit,
+      limit: endBookLimit,
+      order: [["createdAt", "DESC"]],
+    });
+  }
+
+  res.send({
+    totalBooks: totalBooks,
+    queryResult: queryResult,
   });
-
-  totalBooks = await bookModel.count({})
-
-  res.send(
-    {
-      "totalBooks":totalBooks,
-      "queryResult":queryResult
-    }
-  );
 }
 
 async function getBookByName(req, res) {
@@ -45,7 +74,7 @@ async function getBookByName(req, res) {
 
   queryResult = await bookModel.findAll({
     where: {
-      name: name,
+      name: { [operator.like]: `%${name}%` },
     },
   });
 
@@ -59,7 +88,7 @@ async function getBookByAuthor(req, res) {
 
   queryResult = await bookModel.findAll({
     where: {
-      author: author,
+      author: { [operator.like]: `%${author}%` },
     },
   });
 
@@ -71,7 +100,7 @@ async function getBookByGenre(req, res) {
   let queryResult = {};
   queryResult = await bookModel.findAll({
     where: {
-      genre: genre,
+      genre: { [operator.like]: `%${genre}%` },
     },
   });
   res.send(queryResult);

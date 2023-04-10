@@ -1,0 +1,23 @@
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 250px;
+  padding: 20px;
+  background-color: #000000;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  animation-name: slideIn;
+  animation-duration: 0.5s;
+  z-index: 9999;
+}
+
+@keyframes slideIn {
+  from {
+    bottom: -100px;
+  }
+  to {
+    bottom: 20px;
+  }
+}
