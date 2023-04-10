@@ -3,7 +3,7 @@ import "./book-component.css"
 import axios, { Axios } from 'axios'
 import BookButtonGroup from './book-button-group';
 import BookForm from './book-form';
-import SearchBar from './search_component/search-bar';
+import SearchBar from '../search_component/search-bar';
 
 export default function BookTable() {
 
